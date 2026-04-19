@@ -1,0 +1,46 @@
+{
+  "title": "एआई/यूआई डिज़ाइनर",
+  "description": "एआई/यूआई ऐप एक स्मार्ट डिज़ाइन टूल है जो आपको कुछ ही मिनटों में शानदार यूआई बनाने में मदद करता है।",
+  "getStarted": "शुरू करें",
+  "dashboard": "डैशबोर्ड",
+  "createProject": "नया बनाएं",
+  "heroTitle": "AI के साथ बेहतर डिज़ाइन करें",
+  "heroSubtitle": "AI की मदद से सुंदर UI डिज़ाइन बनाएं",
+  "services": "हमारी सेवाएं",
+  "websiteUI": "वेबसाइट UI",
+  "mobileUI": "मोबाइल UI",
+  "dashboardUI": "डैशबोर्ड",
+  "components": "कंपोनेंट्स",
+  "noProjects": "कोई प्रोजेक्ट नहीं",
+  "aiAssistant": "AI सहायक",
+  
+  "profile": "प्रोफ़ाइल",
+  "username": "उपयोगकर्ता नाम",
+  "email": "ईमेल",
+  "projects": "प्रोजेक्ट्स",
+  "designs": "डिज़ाइन",
+  "saved": "सहेजे गए",
+
+  "createProject": "प्रोजेक्ट बनाएं",
+  "projectName": "प्रोजेक्ट का नाम",
+  "describeUI": "अपने UI का वर्णन करें",
+  "generateUI": "UI बनाएं",
+  "fillFields": "सभी फ़ील्ड भरें",
+
+  "aiAssistant": "एआई सहायक",
+  "askAnything": "कुछ भी पूछें...",
+  "send": "भेजें",
+  
+  "aiThinking": "AI सोच रहा है...",
+  "askSomething": "शुरू करने के लिए कुछ पूछें...",
+  "askUI": "UI डिज़ाइन करने के लिए AI से पूछें...",
+  "role": "भूमिका",
+  "experience": "अनुभव",
+  "notSet": "सेट नहीं किया गया",
+   "templates": "टेम्पलेट्स देखें",
+  "yourProjects": "आपके प्रोजेक्ट्स",
+  "welcome": " स्वागत है 👋",
+  "headerSubtitle": "AI के साथ बेहतर डिज़ाइन करें"
+
+
+}

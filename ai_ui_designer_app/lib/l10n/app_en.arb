@@ -1,0 +1,45 @@
+{
+  "title": "AI/UI Designer",
+  "description": "AI/UI app is an intelligent design tool that helps you create stunning user interfaces in minutes.",
+  "getStarted": "Get Started",
+  "dashboard": "Dashboard",
+  "createProject": "Create New",
+  "heroTitle": "Design Smarter with AI",
+  "heroSubtitle": "Create beautiful UI designs instantly with AI assistance.",
+  "services": "Our Services",
+  "websiteUI": "Website UI",
+  "mobileUI": "Mobile UI",
+  "dashboardUI": "Dashboard",
+  "components": "Components",
+  "noProjects": "No projects yet",
+  "aiAssistant": "AI Assistant",
+  
+  "profile": "Profile",
+  "username": "Username",
+  "email": "Email",
+  "projects": "Projects",
+  "designs": "Designs",
+  "saved": "Saved",
+
+  "createProject": "Create Project",
+  "projectName": "Project Name",
+  "describeUI": "Describe your UI",
+  "generateUI": "Generate UI",
+  "fillFields": "Please fill all fields",
+
+  "aiAssistant": "AI Assistant",
+  "askAnything": "Ask anything...",
+  "send": "Send",
+  
+  "aiThinking": "AI is thinking...",
+  "askSomething": "Ask something to start...",
+  "askUI": "Ask AI to design UI...",
+  "role": "Role",
+  "experience": "Experience",
+  "notSet": "Not set",
+   "templates": "Browse Templates",
+  "yourProjects": "Your Projects",
+  "welcome": "Welcome  👋",
+  "headerSubtitle": "Design smarter with AI"
+
+}
