@@ -6,6 +6,7 @@ import Project from '../../database/models/project.model';
 // It automatically looks for GEMINI_API_KEY in your .env file
 const ai = new GoogleGenAI({}); 
 
+// 🔥 1. GENERATE NEW UI VIA GEMINI
 export const generateUI = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, projectName = 'Untitled UI', prompt } = req.body;
@@ -34,7 +35,7 @@ export const generateUI = async (req: Request, res: Response): Promise<void> => 
 
     // Save the result to MongoDB
     const newProject = new Project({
-      userEmail: email || 'anonymous',
+      userEmail: email || 'anonymous', // 👈 Saved as userEmail
       projectName,
       prompt,
       generatedCode
@@ -50,5 +51,21 @@ export const generateUI = async (req: Request, res: Response): Promise<void> => 
   } catch (error: any) {
     console.error('❌ AI Generation Error:', error);
     res.status(500).json({ status: 'error', message: error.message });
+  }
+};
+
+// 🔥 2. GET ALL PROJECTS FOR A SPECIFIC USER
+export const getUserProjects = async (req: any, res: any) => {
+  try {
+    const userEmail = req.params.email;
+    
+    // Find all projects matching the email, sort by newest first
+    // 🔴 FIXED: Now correctly searching for userEmail to match the save logic above!
+    const projects = await Project.find({ userEmail: userEmail }).sort({ createdAt: -1 });
+    
+    res.status(200).json({ status: 'success', data: projects });
+  } catch (error) {
+    console.error("Error fetching projects:", error);
+    res.status(500).json({ status: 'error', message: 'Failed to fetch projects' });
   }
 };

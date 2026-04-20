@@ -1,9 +1,13 @@
 import { Router } from 'express';
-import { generateUI } from './design.controller';
+// 🔥 Changed generateDesign to generateUI to match your controller
+import { generateUI, getUserProjects } from './design.controller'; 
 
 const router = Router();
 
-// This will create the endpoint: POST /api/design/generate
-router.post('/generate', generateUI);
+// Your existing generate route (calling generateUI now)
+router.post('/generate', generateUI); 
+
+// Your new get projects route
+router.get('/projects/:email', getUserProjects);
 
 export default router;

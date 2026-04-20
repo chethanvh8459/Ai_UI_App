@@ -1,9 +1,12 @@
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/theme_provider.dart';
 import '../main.dart';
 import 'package:ai_ui_designer_app/l10n/app_localizations.dart';
-
+import 'code_viewer_screen.dart';
 import 'profile_screen.dart';
 import 'chatbot_screen.dart';
 import 'create_project_screen.dart';
@@ -15,8 +18,10 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  
+  List<dynamic> myProjects = [];
+  bool isLoadingProjects = true;
 
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
@@ -30,17 +35,49 @@ class _HomeScreenState extends State<HomeScreen>
     return const Icon(Icons.language, size: 18);
   }
 
+  // 🔥 FETCH PROJECTS FROM NODE.JS
+  Future<void> fetchMyProjects() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? email = prefs.getString("userEmail");
+
+      if (email == null) return;
+
+      final response = await http.get(
+        Uri.parse('http://127.0.0.1:5000/api/design/projects/$email'),
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        if (mounted) {
+          setState(() {
+            myProjects = data['data'];
+            isLoadingProjects = false;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() => isLoadingProjects = false);
+      }
+      print("Error fetching projects: $e");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    
+    // Fetch data from database
+    fetchMyProjects(); 
 
+    // Setup animations
     _controller = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
     );
 
-    _fadeAnimation =
-        Tween<double>(begin: 0, end: 1).animate(_controller);
+    _fadeAnimation = Tween<double>(begin: 0, end: 1).animate(_controller);
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.05),
@@ -75,8 +112,7 @@ class _HomeScreenState extends State<HomeScreen>
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (_) => const CreateProjectScreen()),
+                MaterialPageRoute(builder: (_) => const CreateProjectScreen()),
               );
             },
             icon: const Icon(Icons.add, size: 18),
@@ -102,7 +138,6 @@ class _HomeScreenState extends State<HomeScreen>
         centerTitle: true,
 
         actions: [
-
           // 🌙 THEME
           IconButton(
             icon: Icon(
@@ -115,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen>
             },
           ),
 
-          // 🌐 LANGUAGE (FIXED)
+          // 🌐 LANGUAGE 
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
@@ -124,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<Locale>(
-                value: MyApp.of(context)?.locale, // ✅ FIXED
+                value: MyApp.of(context)?.locale, 
                 icon: const Icon(Icons.arrow_drop_down, size: 18),
                 onChanged: (Locale? newLocale) {
                   if (newLocale != null) {
@@ -132,25 +167,12 @@ class _HomeScreenState extends State<HomeScreen>
                   }
                 },
                 selectedItemBuilder: (context) {
-                  return [
-                    _languageIcon(),
-                    _languageIcon(),
-                    _languageIcon(),
-                  ];
+                  return [_languageIcon(), _languageIcon(), _languageIcon()];
                 },
                 items: const [
-                  DropdownMenuItem(
-                    value: Locale('en'),
-                    child: Text("English"),
-                  ),
-                  DropdownMenuItem(
-                    value: Locale('hi'),
-                    child: Text("हिंदी"),
-                  ),
-                  DropdownMenuItem(
-                    value: Locale('kn'),
-                    child: Text("ಕನ್ನಡ"),
-                  ),
+                  DropdownMenuItem(value: Locale('en'), child: Text("English")),
+                  DropdownMenuItem(value: Locale('hi'), child: Text("हिंदी")),
+                  DropdownMenuItem(value: Locale('kn'), child: Text("ಕನ್ನಡ")),
                 ],
               ),
             ),
@@ -161,8 +183,7 @@ class _HomeScreenState extends State<HomeScreen>
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (_) => const ProfileScreen()),
+                MaterialPageRoute(builder: (_) => const ProfileScreen()),
               );
             },
           ),
@@ -182,8 +203,7 @@ class _HomeScreenState extends State<HomeScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                // 🔥 HERO (CLEANED)
+                // 🔥 HERO 
                 Container(
                   height: 180,
                   width: double.infinity,
@@ -201,10 +221,8 @@ class _HomeScreenState extends State<HomeScreen>
                       color: Colors.black.withOpacity(0.4),
                     ),
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                      mainAxisAlignment:
-                          MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           t.welcome,
@@ -217,8 +235,7 @@ class _HomeScreenState extends State<HomeScreen>
                         const SizedBox(height: 6),
                         Text(
                           t.headerSubtitle,
-                          style: const TextStyle(
-                              color: Colors.white70),
+                          style: const TextStyle(color: Colors.white70),
                         ),
                       ],
                     ),
@@ -231,8 +248,9 @@ class _HomeScreenState extends State<HomeScreen>
                 Text(
                   t.services,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
                 ),
 
                 const SizedBox(height: 10),
@@ -254,8 +272,9 @@ class _HomeScreenState extends State<HomeScreen>
                 Text(
                   t.templates,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
                 ),
 
                 const SizedBox(height: 10),
@@ -280,29 +299,76 @@ class _HomeScreenState extends State<HomeScreen>
                 Text(
                   t.yourProjects,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
                 ),
 
                 const SizedBox(height: 10),
 
-                Container(
-                  width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 40),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: [
-                      const Icon(Icons.folder_open,
-                          size: 40, color: Colors.grey),
-                      const SizedBox(height: 10),
-                      Text(t.noProjects),
-                    ],
-                  ),
-                ),
+                // 🔥 DYNAMIC PROJECTS LIST
+                isLoadingProjects
+                    ? const Center(child: CircularProgressIndicator()) 
+                    : myProjects.isEmpty
+                        ? Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Column(
+                              children: [
+                                const Icon(
+                                  Icons.folder_open,
+                                  size: 40,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(t.noProjects),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: myProjects.length,
+                            itemBuilder: (context, index) {
+                              var project = myProjects[index];
+                              return Card(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(12),
+                                  leading: const CircleAvatar(
+                                    backgroundColor: Color(0xFF6A11CB),
+                                    child: Icon(Icons.code, color: Colors.white),
+                                  ),
+                                  title: Text(
+                                    project['projectName'] ?? 'Untitled Project',
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Text(
+                                    project['prompt'] ?? '',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                                  onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => CodeViewerScreen(
+                                        projectName: project['projectName'] ?? 'Untitled Project',
+                                        code: project['generatedCode'] ?? 'No code found.',
+                                      ),
+                                    ),
+                                  );
+                                },
+                                ),
+                              );
+                            },
+                          ),
               ],
             ),
           ),
@@ -314,8 +380,7 @@ class _HomeScreenState extends State<HomeScreen>
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (_) => const ChatbotScreen()),
+            MaterialPageRoute(builder: (_) => const ChatbotScreen()),
           );
         },
         child: const Icon(Icons.chat, color: Colors.white),
@@ -325,8 +390,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget serviceTab(IconData icon, String title) {
     return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: accent.withOpacity(0.2),
         borderRadius: BorderRadius.circular(20),
@@ -350,17 +414,13 @@ class _HomeScreenState extends State<HomeScreen>
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-          ),
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6),
         ],
       ),
       child: Column(
         children: [
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(14)),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
             child: Image.network(
               imageUrl,
               height: 80,
