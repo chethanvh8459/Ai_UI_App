@@ -8,13 +8,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true,
-    "verbatimModuleSyntax": false
-  },
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
+    "skipLibCheck": true
   },
   "include": ["src/**/*"]
 }

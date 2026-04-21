@@ -4,8 +4,15 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'utils/theme_provider.dart';
 import 'screens/welcome_screen.dart';
 import 'package:ai_ui_designer_app/l10n/app_localizations.dart';
-
-void main() {
+import 'package:stac/stac.dart';
+// 🔥 ONLY ONE MAIN FUNCTION
+void main() async {
+  // 1. Ensure Flutter bindings are ready
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // 2. Initialize the Mirai UI parser
+  await Stac.initialize();
+  // 3. Run the app with the ThemeProvider wrapped around it
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
@@ -15,6 +22,7 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+// ... The rest of your code stays exactly the same from here down ...
   const MyApp({super.key});
 
   // 🌐 GLOBAL LANGUAGE SWITCH

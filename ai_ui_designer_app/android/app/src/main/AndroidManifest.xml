@@ -2,7 +2,7 @@
 
     <!-- 🔥 ADD THIS LINE HERE -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:label="ai_ui_designer_app"
         android:name="${applicationName}"
